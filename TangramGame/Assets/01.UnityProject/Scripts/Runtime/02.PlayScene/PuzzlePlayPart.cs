@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.EventSystems; 
 
 public class PuzzlePlayPart : MonoBehaviour, IPointerDownHandler, 
-    IPointerUpHandler, IPointerMoveHandler
+    IPointerUpHandler, IDragHandler
 {
 
     private bool isClicked = false;
+    private RectTransform objRect = default;
+    private PuzzleInitZone puzzleInitZone = default; 
 
     //눌렀을떄
     public void OnPointerDown(PointerEventData eventData) {
@@ -17,10 +19,14 @@ public class PuzzlePlayPart : MonoBehaviour, IPointerDownHandler,
 
 
     //마우스를 드래그 중일떄
-    public void OnPointerMove(PointerEventData eventData) {
+    public void OnDrag(PointerEventData eventData) {
         if(isClicked == true) {
-            gameObject.SetLocalPos(eventData.position.x, eventData.position.y, 0f);
-            GFunc.Log($"마우스의 포지션은? {eventData.position.x}, {eventData.position.y}");
+            //절대 좌표를 설정하는 로직 -> 상대적 움직임ㅁ을 현재 포지션에 더하는 로직으로 수정 
+
+            gameObject.AddAnchoredPos(eventData.delta / puzzleInitZone.parentCanvas.scaleFactor); 
+
+
+            
         }
     }
 
@@ -35,6 +41,8 @@ public class PuzzlePlayPart : MonoBehaviour, IPointerDownHandler,
     void Start()
     {
         isClicked = false;
+        objRect = gameObject.GetRect();
+        puzzleInitZone = transform.parent.gameObject.GetComponentMust<PuzzleInitZone>();
 
     }
 

@@ -100,4 +100,12 @@ public static partial class GFunc
         return component_;
     }       // GetComponentMust()
 
+    public static RectTransform GetRect(this GameObject obj_) {
+        return obj_.GetComponentMust<RectTransform>();
+    }
+
+    public static void AddAnchoredPos(this GameObject obj_, Vector2 position2D) {
+        obj_.GetRect().anchoredPosition += position2D; 
+    }
+
 }
